@@ -28,6 +28,7 @@ setup(
     entry_points={
         'console_scripts': [
             'Tailer=Tailer.Tailer:main',
+            'tailer-parallel=Tailer.tailer_parallel:main',
         ],
     },
 

@@ -21,6 +21,27 @@ Global alignment with a GTF annotation and SAM/BAM formatted files
 Tailer -a [GTF Annotation] [SAM or BAM Files]
 ```
 
+Parallel global alignment for large SAM/BAM files
+```bash
+tailer-parallel -p 32 -a [GTF Annotation] [SAM or BAM Files]
+```
+
+`tailer-parallel` reimplements Tailer's global GTF mode with multiprocessing.
+It writes the same `<input>_tail.csv` output columns as `Tailer`, but distributes
+the per-sequence annotation lookups across worker processes. It is intended for
+large BAMs where upstream `Tailer` is too slow.
+
+Useful parallel-mode options
+
+* ``-p, --processes [int]``
+    - Number of worker processes. For large BAMs, 16-32 often uses less memory than 64 with similar throughput.
+* ``-se, --se_read {1,2}``
+    - Single-end orientation. Use ``-se 1`` for PEAR-merged reads that retain read1 orientation; default ``2`` matches Tailer's paired-end read2 convention.
+* ``--chunk-timeout [int, default=900]``
+    - Seconds without any worker result before the parent terminates the pool and recovers retained in-flight chunks locally instead of hanging indefinitely.
+* ``-read, --read [int, default=2]``
+    - Paired-end only: which read holds the 3' end.
+
 Required Arguments
 
 * ``-a, --annotation``
